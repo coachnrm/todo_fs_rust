@@ -1,0 +1,32 @@
+[package]
+name = "todo_fs"
+version = "0.1.0"
+authors = ["coachnrm <nuttapong_coach@hotmail.com>"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+dioxus = { version = "0.6.0", features = ["router", "fullstack"] }
+serde = { version = "1.0.215", features = ["derive"] }
+sqlx = { version="0.8.3", features = [ "sqlite", "runtime-tokio", "tls-native-tls" ], optional = true}
+tokio = { version = "1.20.0", features = ["full"] , optional = true}
+
+[features]
+default = []
+web = ["dioxus/web"]
+desktop = ["dioxus/desktop"]
+mobile = ["dioxus/mobile"]
+server = ["dioxus/server", "sqlx", "dep:tokio"]
+
+[profile]
+
+[profile.wasm-dev]
+inherits = "dev"
+opt-level = 1
+
+[profile.server-dev]
+inherits = "dev"
+
+[profile.android-dev]
+inherits = "dev"
