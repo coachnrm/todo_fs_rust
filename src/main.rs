@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 mod backend;
 mod components;
 
-use components::{home::Home, nav::Nav};
+use components::{home::Home, nav::Nav, todo::Todo};
 
 fn main() {
     launch(App);
@@ -36,7 +36,9 @@ fn App()->Element {
 pub enum Route {
     #[layout(Nav)]
     #[route("/")]
-    Home {}
+    Home {},
+    #[route("/todo/:id")]
+    Todo {id: i64}
 }
 
 #[derive(Debug,Clone,PartialEq,Serialize,Deserialize)]
