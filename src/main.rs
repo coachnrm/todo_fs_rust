@@ -1,12 +1,13 @@
 #![allow(non_snake_case)]
 
+use backend::server_functions::get_todo_list;
 use dioxus::prelude::*;
 use serde::{Deserialize, Serialize};
 
 mod backend;
 mod components;
 
-use components::home::Home;
+use components::{home::Home, nav::Nav};
 
 fn main() {
     launch(App);
@@ -14,13 +15,26 @@ fn main() {
 
 #[component]
 fn App()->Element {
+    let mut list = use_signal(|| vec![]);
+
+    let _ = use_resource(move || async move {
+        match get_todo_list().await {
+            Ok(todos) => list.set(todos),
+            Err(_) => ()
+        }
+    });
+
+    use_context_provider(|| list);
+    
     rsx!(
+        document::Stylesheet { href: asset!("/assets/main.css")}
         Router::<Route> {}
     )
 }
 
 #[derive(Clone, PartialEq, Routable)]
 pub enum Route {
+    #[layout(Nav)]
     #[route("/")]
     Home {}
 }
